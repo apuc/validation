@@ -2,7 +2,7 @@ function Validation() {
 
     this.init = function (options) {
         this.defaultParams = {
-            class: "valItem",
+            classItem: "valItem",
             tagNameErrorMessage: "data-msg",
             event: 'submit',
             eventElement: '#submit',
@@ -11,7 +11,7 @@ function Validation() {
             errorMessageClass: 'errorMsgClass',
             successMessageClass: 'successMsgClass',
             ajaxUrl: 'ajax.php',
-            ajax: true,
+            ajax: false,
             submitForm: true,
             tpl:[],
             ajaxSubmitSuccess: function (responseText, err, form) {
@@ -53,7 +53,7 @@ function Validation() {
 
     this.customSubmit = function (event) {
         event.preventDefault();
-        var validationElements = document.getElementsByClassName(this.options.class);
+        var validationElements = document.getElementsByClassName(this.options.classItem);
         var form = this.getParent(this.getSubmitElement(), 'FORM');
         var flag = [];
         for (var i = 0; i < validationElements.length; i++) {
@@ -177,7 +177,7 @@ function Validation() {
     this.getValInput = function () {
         var valInput;
 
-        valInput = document.getElementsByClassName(this.options.class);
+        valInput = document.getElementsByClassName(this.options.classItem);
 
         return valInput;
     }
