@@ -24,6 +24,8 @@ function Validation() {
                     form.submit();
                 }
             },
+            submitError: function (err, form) {
+            },
             ajaxOnblurSuccess: function (responseText, err, form) {
             },
         };
@@ -98,6 +100,9 @@ function Validation() {
                     this.options.submitSuccess(false,form);
                 }
             }
+        }
+        else {
+            this.options.submitError(true,form);
         }
     }
 
