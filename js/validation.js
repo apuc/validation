@@ -179,7 +179,7 @@ function Validation() {
     this.clearPrompt = function (event) {
         var validationElement = event.target;
         this.deleteErrorMsg(validationElement);
-        if(validationElement.hasAttribute(this.options.attributePromptBox)){
+        if (validationElement.hasAttribute(this.options.attributePromptBox)) {
             var el = this.getElement(validationElement.getAttribute(this.options.attributePromptBox));
             el.innerHTML = '';
         }
@@ -481,6 +481,20 @@ function Validation() {
         valInput = document.getElementsByClassName(this.options.classItem);
 
         return valInput;
+    }
+
+    this.getInputByName = function (name) {
+        return document.getElementsByName(name);
+    }
+
+    this.clearInput = function (name) {
+        var el = this.getInputByName(name);
+        if(el.length > 0){
+            for (var i = 0; i < el.length; i++) {
+                this.deleteErrorMsg(el[i]);
+                el[i].value = '';
+            }
+        }
     }
 
     this.insertAfter = function (elem, refElem) {
