@@ -179,8 +179,10 @@ function Validation() {
     this.clearPrompt = function (event) {
         var validationElement = event.target;
         this.deleteErrorMsg(validationElement);
-        var el = this.getElement(validationElement.getAttribute(this.options.attributePromptBox));
-        el.innerHTML = '';
+        if(validationElement.hasAttribute(this.options.attributePromptBox)){
+            var el = this.getElement(validationElement.getAttribute(this.options.attributePromptBox));
+            el.innerHTML = '';
+        }
     }
 
     this.clearMsgBox = function () {
