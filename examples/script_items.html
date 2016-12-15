@@ -11,7 +11,7 @@
     <form action="#">
         <p>
             <label for="v_login">Логин</label>
-            <input id="v_login" name="v_login" type="text" class="vItem" required>
+            <input id="v_login" data-url="../php/ajax.php" name="v_login" type="text" class="vItem" required>
         </p>
         <p>
             <label for="v_name">Имя</label>
@@ -34,6 +34,9 @@
     valid.init({
         classItem: 'vItem',
         eventElement: '#subm',
+        event:'onblur',
+        ajax:true,
+        ajaxUrl:'../php/ajax.php',
         items: [
             {
                 item:'v_login',
@@ -69,7 +72,19 @@
                 //form.submit();
                 alert('Все верно');
             }
-        }
+        },
+        ajaxSubmitSuccess: function (responseText, err, form) {
+            if (!err) {
+                //form.submit();
+                console.log(responseText);
+            }
+        },
+        ajaxOnblurSuccess: function (responseText, err, form) {
+            if (!err) {
+                //form.submit();
+                console.log(responseText);
+            }
+        },
     });
 </script>
 </body>

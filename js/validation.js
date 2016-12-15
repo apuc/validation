@@ -137,22 +137,26 @@ function Validation() {
                 next.parentNode.removeChild(next);
             }
         }
-        if (validationElement.hasAttribute('data-tpl')) {
-            var arr = validationElement.getAttribute('data-tpl');
+        if (validationElement.hasAttribute('data-tpl') || this.hasTpl(validationElement)) {
+            var arr = this.getTpl(validationElement);
             var pat = this.tpls();
             var val = validationElement.value;
             if (!pat[arr.trim()].test(val)) {
                 this.deleteErrorMsg(validationElement);
-                this.generateMsg(validationElement, 'error');
+                this.generateMsg(validationElement, 'error',this.getTplMsg(validationElement));
             }
             else {
-                this.deleteErrorMsg(validationElement);
-                this.generateMsg(validationElement, 'success');
+                if (this.options.ajax) {
+                    this.ajaxValidPost(validationElement, this.options.ajaxOnblurSuccess);
+                }
+                else {
+                    this.deleteErrorMsg(validationElement);
+                    this.generateMsg(validationElement, 'success');
+                }
             }
         }
         else {
             if (!validationElement.checkValidity()) {
-                //validationElement.classList.add(this.options.errorClass);
                 this.deleteErrorMsg(validationElement);
                 this.generateMsg(validationElement, 'error');
             }
@@ -535,21 +539,30 @@ function Validation() {
             xhr.onreadystatechange = function () {
                 if (xhr.readyState != 4) return;
                 if (xhr.status == 200) {
-                    var ans = JSON.parse(xhr.responseText);
-                    for (var i = 0; i < ans.length; i++) {
-                        var vEl = document.getElementsByName(ans[i].item);
-                        if (ans[i].status == 0) {
-                            obj.generateAjaxErrorMsg(vEl[0], ans[i].error_msg);
-                            flag = true;
-                        }
-                        else {
-                            obj.deleteErrorMsg(vEl[0]);
+                    try {
+                        var ans = JSON.parse(xhr.responseText);
+                    } catch (e) {
+                        ans = false;
+                    }
+                    if(ans){
+                        for (var i = 0; i < ans.length; i++) {
+                            var vEl = document.getElementsByName(ans[i].item);
+                            if (ans[i].status == 0) {
+                                obj.deleteErrorMsg(vEl[0]);
+                                obj.generateMsg(vEl[0],'error',ans[i].error_msg);
+                                flag = true;
+                            }
+                            else {
+                                obj.deleteErrorMsg(vEl[0]);
+                                obj.generateMsg(vEl[0],'success');
+                            }
                         }
                     }
                 }
                 else {
                     for (var j = 0; j < validationElement.length; j++) {
-                        obj.generateAjaxErrorMsg(validationElement[j], 'Ошибка ' + xhr.status);
+                        obj.deleteErrorMsg(validationElement[j]);
+                        obj.generateMsg(validationElement[j],'error','Ошибка ' + xhr.status);
                         flag = true;
                     }
                 }
@@ -564,17 +577,28 @@ function Validation() {
                 xhr.onreadystatechange = function () {
                     if (xhr.readyState != 4) return;
                     if (xhr.status == 200) {
-                        var ans = JSON.parse(xhr.responseText);
-                        if (ans.status == 0) {
-                            obj.generateAjaxErrorMsg(validationElement, ans.error_msg);
-                            flag = true;
+                        try {
+                            var ans = JSON.parse(xhr.responseText);
+                        } catch (e) {
+                            ans = false;
                         }
-                        else {
-                            obj.deleteErrorMsg(validationElement);
+                        if(ans){
+                            if (ans.status == 0) {
+                                obj.deleteErrorMsg(validationElement);
+                                obj.generateMsg(validationElement,'error',ans.error_msg);
+                                /*obj.generateAjaxErrorMsg(validationElement, ans.error_msg);*/
+                                flag = true;
+                            }
+                            else {
+                                obj.generateMsg(validationElement,'success');
+                                obj.deleteErrorMsg(validationElement);
+                            }
                         }
                     }
                     else {
-                        obj.generateAjaxErrorMsg(validationElement, 'Ошибка ' + xhr.status);
+                        obj.deleteErrorMsg(validationElement);
+                        obj.generateMsg(validationElement,'error','Ошибка ' + xhr.status);
+                        /*obj.generateAjaxErrorMsg(validationElement, 'Ошибка ' + xhr.status);*/
                         flag = true;
                     }
                 }

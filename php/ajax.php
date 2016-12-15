@@ -28,3 +28,23 @@ if(count($_POST) > 1){
     }
     echo json_encode($arr, JSON_UNESCAPED_UNICODE);
 }
+else {
+    if(isset($_POST['v_login'])){
+        if($_POST['v_login'] == 'admin'){
+            echo json_encode(['status'=>1]);
+        }
+        else{
+            echo json_encode(['status'=>0,'error_msg'=>'Неверный логин 444'], JSON_UNESCAPED_UNICODE);
+        }
+    }
+    if(isset($_POST['v_name'])){
+        if($_POST['v_name'] == 'кирилл'){
+            echo json_encode(['status'=>1]);
+        }
+        else{
+            echo json_encode(['status'=>0,'error_msg'=>'Неверный логин 111'], JSON_UNESCAPED_UNICODE);
+        }
+    }
+}
+
+//var_dump($_POST);
