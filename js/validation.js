@@ -26,6 +26,9 @@ function Validation() {
             submitForm: true,
             tpl: [],
             tpl_msg: [],
+            errorMsgTpl: false,
+            promptMsgTpl: false,
+            successMsgTpl: false,
             items: [],
             ajaxSubmitSuccess: function (responseText, err, form) {
                 if (!err) {
@@ -252,9 +255,13 @@ function Validation() {
         }
 
         if (this.hasMsg(vEl, type) || msg != '') {
+            var tpl, thisMsg = msg != '' ? msg : this.getMsg(vEl, type);
+            if(tpl = this.generateTplMsg(vEl,type,thisMsg)){
+                thisMsg = tpl;
+            }
             var errorMsg = document.createElement('span');
             errorMsg.classList.add(msgClass);
-            errorMsg.innerHTML = msg != '' ? msg : this.getMsg(vEl, type);
+            errorMsg.innerHTML = thisMsg;
             if (vEl.hasAttribute(boxAttr)) {
                 var box = this.getElement(vEl.getAttribute(boxAttr));
                 errorMsg.classList.add(type + '-to-' + vEl.getAttribute('name'));
@@ -272,6 +279,25 @@ function Validation() {
         errorMsg.classList.add(this.options.errorMessageClass);
         errorMsg.innerHTML = msg;
         this.insertAfter(errorMsg, vEl);
+    }
+
+    this.generateTplMsg = function(vEl,type,msg){
+        if(type == 'error'){
+            if (this.options.errorMsgTpl){
+                return this.options.errorMsgTpl.replace('{msg}',msg);
+            }
+        }
+        if(type == 'prompt'){
+            if (this.options.promptMsgTpl){
+                return this.options.promptMsgTpl.replace('{msg}',msg);
+            }
+        }
+        if(type == 'success'){
+            if (this.options.successMsgTpl){
+                return this.options.successMsgTpl.replace('{msg}',msg);
+            }
+        }
+        return false;
     }
 
     this.getInputErrorClass = function (vEl) {
